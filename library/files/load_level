@@ -1,0 +1,57 @@
+
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.util.Vector;
+import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.Image;
+
+public class LoadLevel implements MenuListener {
+
+    private Menu menu;
+    String[] level_list;
+
+    public LoadLevel() {
+        menu = new Menu();
+    }
+
+    public void listLevel() {
+        String buf = "";
+        Vector v = new Vector();
+        DataInputStream dis = new DataInputStream(getClass().getResourceAsStream("/level.dat"));
+
+        try {
+            try {
+                while (true) {
+                    char ch = dis.readChar();
+                    if (ch == ' ') {
+                        v.addElement(buf);
+                        buf = "";
+
+                    }
+                    buf += ch;
+                }
+            } catch (EOFException eof) {
+                Main.midlet.crash("Error in read level from jar (LoadLevel.java");
+            }
+        } catch (IOException io) {
+            level_list = new String[v.size()];
+            for (int i = 0; i < level_list.length; i++) {
+                level_list[i] = (String) v.elementAt(i);
+            }
+        }
+
+        Image[] level_icon = new Image[]{null, null, null};
+
+        menu.setMenu("Select level", "Select", "Back", level_list, level_icon);
+        menu.setMenuListener(this);
+        Main.midlet.display.setCurrent(menu);
+        menu.viewMenu();
+    }
+
+    public void menuAction(Menu menu, String result) {
+        if (result.equals("Back")) {
+            Main.midlet.setMainMenu();
+        }
+    }
+}
