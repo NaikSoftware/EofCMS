@@ -1,4 +1,4 @@
 EofCMS
 ======
 
-New PHP mobile content management system (CMS)
+New mobile CMS (content management system) on PHP
